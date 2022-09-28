@@ -1,35 +1,32 @@
 {% extends 'base.html' %}
 
 {% block meta %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 <title>Login</title>
 {% endblock meta %}
 
 {% block content %}
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 <div class = "login">
 
-    <h1>Login</h1>
-
+    <h2 style="font-weight: bold; text-align: center; margin-top: 30px;">Login</h2>
+    <div class="form" style="padding: 30px">
     <form method="POST" action="">
         {% csrf_token %}
-        <table>
-            <tr>
-                <td>Username: </td>
-                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
-            </tr>
-                    
-            <tr>
-                <td>Password: </td>
-                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
-            </tr>
-
-            <tr>
-                <td></td>
-                <td><input class="btn login_btn" type="submit" value="Login"></td>
-            </tr>
-        </table>
+        <div class="mb-3">
+            <label class="form-label">Username:</label>
+            <input type="text" name="username" placeholder="Username" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password:</label>
+            <input type="password" name="password" placeholder="Password" class="form-control">
+        </div>
+        Belum mempunyai akun? <a href="{% url 'wishlist:register' %}">Buat Akun</a><br><br>
+        <input class="btn login_btn btn-primary" type="submit" value="Login">
+        
     </form>
-
+    </div>
     {% if messages %}
         <ul>
             {% for message in messages %}
@@ -38,7 +35,7 @@
         </ul>
     {% endif %}     
         
-    Belum mempunyai akun? <a href="{% url 'wishlist:register' %}">Buat Akun</a>
+    
 
 </div>
 
