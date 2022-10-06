@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<title>Wishlist</title>
+{% endblock meta %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.getJSON('/wishlist/json/', function(data) {
+            var item = '';
+            $.each(data, function(key, value) {
+                item += '<tr>';
+                item += '<td scope="row" style="font-weight: normal; text-align: center;">' +
+                    value.fields.nama_barang + '</td>';
+                item += '<td style="font-weight: normal; text-align: center;">' +
+                    value.fields.harga_barang + '</td>';
+                item += '<td style="font-weight: normal; text-align: center;">' +
+                    value.fields.deskripsi + '</td>';
+                item += '</tr>';
+            });
+            $('.table').append(item);
+        });
+    });
+
+    $(document).on('submit', '#form', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/wishlist/ajax/submit/',
+            data:{
+                nama_barang:$('#nama_barang').val(),
+                harga_barang:$('#harga_barang').val(),
+                deskripsi:$('#deskripsi').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action:'post'
+            },
+            success:function(data){
+                var item = '';
+                item += '<tr>';
+                item += '<td scope="row" style="font-weight: normal; text-align: center;">' +
+                    data.nama_barang + '</td>';
+                item += '<td style="font-weight: normal; text-align: center;">' +
+                    data.harga_barang + '</td>';
+                item += '<td style="font-weight: normal; text-align: center;">' +
+                    data.deskripsi + '</td>';
+                item += '</tr>';
+                $('.table').append(item);
+                $("#form")[0].reset();
+            },
+        });
+    });
+</script>
+<nav class="navbar" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1" style="font-weight: bold;">My Wishlist 📝</span>
+        <span class="navbar-text">Halo, <span style="font-weight: bold;">{{nama}}</span>!</span>
+        <a class="btn btn-outline-danger" href="{% url 'wishlist:logout' %}" role="button">Logout</a>
+    </div>
+</nav>
+
+<form id="form" method="POST">
+    {% csrf_token %}
+    <div class="form-group m-3">
+        <label for="nama_barang">Nama Barang</label>
+        <input type="text" class="form-control" id="nama_barang" name="harga_barang" placeholder="Nama Barang">
+    </div>
+    <div class="form-group m-3">
+        <label for="harga_barang">Harga Barang</label>
+        <input type="text" class="form-control" id="harga_barang" name="harga_barang" placeholder="Harga Barang">
+    </div>
+    <div class="form-group mx-3 mt-3">
+        <label for="deskripsi">Deskripsi</label>
+        <input type="text" class="form-control" id="deskripsi" name="deskripsi" placeholder="Deskripsi">
+    </div>
+    <button type="submit" class="btn btn-primary mx-3 my-2">Submit</button>
+</form>
+
+<table class="table table-hover table-bordered">
+    <tr>
+    <th scope="col" style="text-align: center;">Nama Barang</th>
+    <th scope="col" style="text-align: center;">Harga Barang</th>
+    <th scope="col" style="text-align: center;">Deskripsi</th>
+    </tr>
+    
+</table>
+<p class="font-weight-light" style="font-size:x-small; text-align: center;">Sesi terakhir login: {{ last_login }}</p>
+
+{% endblock content %}
